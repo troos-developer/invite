@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brunch & Catch-Up</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f7e7ff, #eed9ff, #f3e5ff);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* FLOATING HEARTS */
+    .heart {
+      position: fixed;
+      font-size: 22px;
+      color: #ff8de6;
+      animation: floatUp 4.5s linear infinite;
+      opacity: 0.9;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(10px) scale(0.9); opacity: 0.9; }
+      100% { transform: translateY(-110vh) scale(1.3); opacity: 0; }
+    }
+
+    /* CARD POPUP */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(3px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-card {
+      width: 92%;
+      max-width: 370px;
+      background: #ffffffee;
+      border-radius: 25px;
+      padding: 30px 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      animation: popIn 0.35s ease-out;
+      position: relative;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .popup-card h2 {
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: #6e3dac;
+      line-height: 1.4;
+    }
+
+    .popup-card .small-heart {
+      position: absolute;
+      font-size: 18px;
+      color: #ff7ee5;
+    }
+    .small-heart:nth-child(1) { top: -12px; left: 20px; }
+    .small-heart:nth-child(2) { top: -12px; right: 20px; }
+    .small-heart:nth-child(3) { bottom: -12px; left: 20px; }
+    .small-heart:nth-child(4) { bottom: -12px; right: 20px; }
+
+    button {
+      background: linear-gradient(135deg, #c58aff, #b276f5);
+      border: none;
+      padding: 13px;
+      border-radius: 14px;
+      margin: 10px auto;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 85%;
+      display: block;
+      transition: 0.25s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #b276f5, #ac67f3);
+    }
+
+    .back-btn {
+      background: #9f78d4;
+    }
+
+    /* INVITATION CARD */
+    #content {
+      display: none;
+      padding: 25px;
+      text-align: center;
+      background: #ffffffee;
+      width: 92%;
+      max-width: 380px;
+      border-radius: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #content h2 {
+      font-family: 'Pacifico', cursive;
+      font-size: 2rem;
+      color: #7a3ed1;
+      margin-bottom: 15px;
+      text-shadow: 1px 1px 2px #e7c7ff;
+    }
+
+    #content p {
+      font-size: 1.12rem;
+      line-height: 1.55;
+      margin: 10px 0;
+      color: #69418f;
+      font-weight: 400;
+    }
+
+    #signature {
+      margin-top: 18px;
+      font-family: 'Pacifico', cursive;
+      font-size: 1.4rem;
+      color: #8d55d9;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  function spawnHearts() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = (3.5 + Math.random() * 3) + 's';
+    heart.innerHTML = ['💜','💖','💕','💗'][Math.floor(Math.random()*4)];
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+  }
+  setInterval(spawnHearts, 600);
+</script>
+
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-card" id="popupBox">
+    <div class="small-heart">💖</div>
+    <div class="small-heart">💖</div>
+    <div class="small-heart">💖</div>
+    <div class="small-heart">💖</div>
+
+    <h2>Hey there 👋<br>Are you <strong>Miss Tan</strong>?</h2>
+
+    <button onclick="handleAnswer(true)">Yes, I’m Miss Tan 💜</button>
+    <button onclick="handleAnswer(false)">Nope, somebody else 😗</button>
+  </div>
+</div>
+
+<div id="content"></div>
+
+<script>
+  function handleAnswer(isTan) {
+    const box = document.getElementById('popupBox');
+    const overlay = document.getElementById('popupOverlay');
+
+    if (!isTan) {
+      box.innerHTML = `
+        <div class='small-heart'>💖</div>
+        <div class='small-heart'>💖</div>
+        <div class='small-heart'>💖</div>
+        <div class='small-heart'>💖</div>
+        <h2 style="font-size:1.45rem;">
+          Oopsieee 😅💗<br>
+          This little card isn’t meant for you…<br>
+          Go mind your business!
+        </h2>
+        <button class='back-btn' onclick='resetPopup()'>Let me try again 🔄</button>
+      `;
+      return;
+    }
+
+    box.innerHTML = `
+      <div class='small-heart'>💖</div>
+      <div class='small-heart'>💖</div>
+      <div class='small-heart'>💖</div>
+      <div class='small-heart'>💖</div>
+      <h2>Welcome, Miss Tan 💜✨</h2>
+    `;
+
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      showInvitation();
+    }, 2600);
+
+    confettiBurst();
+  }
+
+  function resetPopup() {
+    const box = document.getElementById('popupBox');
+    box.innerHTML = `
+      <div class='small-heart'>💖</div>
+      <div class='small-heart'>💖</div>
+      <div class='small-heart'>💖</div>
+      <div class='small-heart'>💖</div>
+      <h2>Hey there 👋<br>Are you <strong>Miss Tan</strong>?</h2>
+      <button onclick="handleAnswer(true)">Yes, I’m Miss Tan 💜</button>
+      <button onclick="handleAnswer(false)">Nope, somebody else 😗</button>
+    `;
+  }
+
+  function showInvitation() {
+    const content = document.getElementById('content');
+    content.style.display = 'block';
+    content.innerHTML = `
+      <h2>Brunch & Catch-Up</h2>
+
+      <p>You’re warmly invited to a sweet and simple<br><strong>Brunch & Catch-Up</strong> date 🥞✨</p>
+
+      <p><strong>Date:</strong> Tuesday, 16 December 2025</p>
+      <p><strong>Time:</strong> 12h00 PM</p>
+      <p><strong>Venue:</strong><br>The Crossing Shopping Centre,<br>Panarottis Mahikeng</p>
+      <p><strong>Dress Code:</strong> Anything you're comfy and cute in 💜</p>
+
+      <p>It would honestly be lovely to see you again<br>after more than a year apart.</p>
+
+      <p style="margin-top:15px; font-size:1.05rem; color:#6e3dac; line-height:1.5;">
+Oh,,, and don’t worry about transportation 💜<br>
+I’ll happily cover your <strong>Bolt</strong> ride to the venue so you arrive relaxed, cute and stress-free 🚗✨
+</p>
+
+      <div style="margin-top:20px; text-align:center;">
+        <form action="https://formspree.io/f/xnqyrbln" method="POST" id="responseForm" style="display:flex; flex-direction:column; gap:12px; align-items:center;">
+          <input type="hidden" name="response" id="responseType" />
+          <textarea name="message" id="responseMessage" placeholder="Add a comment (optional)..." style="width:92%; max-width:350px; height:80px; padding:10px; border-radius:12px; border:1px solid #cba8ff; font-family:'Poppins'; font-size:0.95rem; resize:none;"></textarea>
+
+          <button type="button" onclick="submitResponse('Accepted')" style="background:linear-gradient(135deg,#a86bff,#8c4df3);">Accept 💜</button>
+          <button type="button" onclick="submitResponse('Suggest Better Time')" style="background:linear-gradient(135deg,#ffc36b,#ffad4d);">Suggest Better Time 🕒</button>
+          <button type="button" onclick="submitResponse('Rejected')" style="background:linear-gradient(135deg,#ff7a7a,#ff4d4d);">Reject 💔</button>
+        </form>
+      </div>
+
+      <div id="signature">– Kgomotso 💜</div>
+    `;
+  }
+
+  function submitResponse(type){
+    const messageBox = document.getElementById('responseMessage');
+    if(type === 'Suggest Better Time' && messageBox.value.trim() === ''){
+      messageBox.placeholder = 'Please suggest a better time ⏰';
+      messageBox.focus();
+      return;
+    }
+    document.getElementById('responseType').value = type;
+    document.getElementById('responseForm').submit();
+  }
+
+  function confettiBurst() {
+    for (let i = 0; i < 50; i++) {
+      const c = document.createElement('div');
+      c.style.position = 'fixed';
+      c.style.width = '10px';
+      c.style.height = '10px';
+      c.style.background = `hsl(${Math.random()*360}, 85%, 75%)`;
+      c.style.top = '-10px';
+      c.style.left = Math.random() * window.innerWidth + 'px';
+      c.style.animation = 'fall 2.6s linear forwards';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 2600);
+    }
+  }
+</script>
+
+<style>
+  @keyframes fall {
+    to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+</style>
+
+</body>
+</html>
